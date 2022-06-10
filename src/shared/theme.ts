@@ -16,5 +16,37 @@ export const theme = createTheme({
         }
       }
     },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#FAFAFB'
+        }
+      }
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        head: {
+          fontWeight: 600
+        }
+      }
+    },
+    MuiButton: {
+      defaultProps: {
+        variant: 'contained',
+        color: 'primary'
+      },
+      styleOverrides: {
+        contained: {
+          fontWeight: 500
+        }
+      }
+    },
+    MuiTextField: {
+      defaultProps: {
+        size: 'small',
+        variant: 'outlined',
+        fullWidth: true,
+      }
+    }
   }
 });

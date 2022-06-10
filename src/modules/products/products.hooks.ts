@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
-import { createClientAction, fetchClientAction, fetchClientsListAction } from "./clients.actions";
-import { ClientInputType, ClientType } from "./clients.types";
+import { createProductAction, fetchProductAction, fetchProductsListAction } from "./products.actions";
+import { ProductInputType, ProductType } from "./products.types";
 
-export const useClientsList = () => {
-  const [data, setData] = useState<Array<ClientType>>([]);
+export const useProductsList = () => {
+  const [data, setData] = useState<Array<ProductType>>([]);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
-  const getClientsList = useCallback(() => {
+  const getProductsList = useCallback(() => {
     setLoading(true);
-    fetchClientsListAction()
+    fetchProductsListAction()
       .then((data) => {
-        setData(data.clientsList)
+        setData(data.productsList)
       })
       .catch((err: Error) => {
         snackbar({ color: 'error', message: err.message })
@@ -23,26 +23,26 @@ export const useClientsList = () => {
   }, [snackbar]);
 
   useEffect(() => {
-    getClientsList();
-  }, [getClientsList]);
+    getProductsList();
+  }, [getProductsList]);
 
   return { 
     data, 
-    refetch: getClientsList,
+    refetch: getProductsList,
     loading
   };
 }
 
 
-export const useClientDetails = ({ id }: { id: number }) => {
-  const [data, setData] = useState<ClientType | null>(null);
+export const useProductDetails = ({ id }: { id: number }) => {
+  const [data, setData] = useState<ProductType | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
-  const getClient = useCallback(() => {
-    fetchClientAction(id)
+  const getProduct = useCallback(() => {
+    fetchProductAction(id)
       .then((data) => {
-        setData(data.client)
+        setData(data.product)
       })
       .catch((err: Error) => {
         snackbar({ color: 'error', message: err.message })
@@ -53,30 +53,30 @@ export const useClientDetails = ({ id }: { id: number }) => {
   }, [id, snackbar]);
 
   useEffect(() => {
-    getClient();
-  }, [getClient]);
+    getProduct();
+  }, [getProduct]);
 
   return { 
     data, 
-    refetch: getClient,
+    refetch: getProduct,
     loading
   };
 };
 
-export const useCreateClient = ({
+export const useCreateProduct = ({
   onSuccess,
   onError 
 }: { 
-  onSuccess: (data: ClientType) => void, 
+  onSuccess: (data: ProductType) => void, 
   onError: (err: Error) => void 
 }) => {
   const [submiting, setSubmiting] = useState(false);
 
-  const createClient = useCallback((input: ClientInputType) => {
+  const createProduct = useCallback((input: ProductInputType) => {
     setSubmiting(true);
-    createClientAction(input)
+    createProductAction(input)
       .then((data) => {
-        onSuccess(data.client)
+        onSuccess(data.product)
       })
       .catch(onError)
       .finally(() => {
@@ -84,5 +84,5 @@ export const useCreateClient = ({
       })
   }, [onError, onSuccess])
 
-  return { submiting, submit: createClient }
+  return { submiting, submit: createProduct }
 };

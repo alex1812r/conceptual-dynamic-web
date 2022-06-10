@@ -1,14 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { ClientType } from '../clients.types';
-import { ActionsMenuIconButton } from '../../../shared/components/ActionsMenuIconButton';
-import { ClientStatusChip } from './ClientStatusChip';
-import { useNavigate } from 'react-router-dom';
-import { TableRowLoading } from '../../../shared/components/TableRowLoading';
-import { TableRowEmpty } from '../../../shared/components/TableRowEmpty';
+import React, { useCallback, useMemo, useState } from "react";
+import { Avatar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { ActionsMenuIconButton } from "../../../shared/components/ActionsMenuIconButton";
+import { TableRowEmpty } from "../../../shared/components/TableRowEmpty";
+import { TableRowLoading } from "../../../shared/components/TableRowLoading";
+import { numberWithCommas } from "../../../shared/utils";
+import { ProductType } from "../products.types";
+import { ProductStatusChip } from "./ProductStatusChip";
 
 interface TableRowItemProps {
-  data: ClientType;
+  data: ProductType
   onDelete: (id: number) => void;
 }
 const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
@@ -21,7 +22,7 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
   }, [data.id, onDelete])
 
   const handleOnDetails = useCallback(() => {
-    navigate(`/clients/${data.id}`)
+    navigate(`/products/${data.id}`)
     setOpenActionsMenu(false)
   }, [data.id, navigate])
 
@@ -35,13 +36,21 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
 
   return (
     <TableRow>
-      <TableCell component="th" scope="row">{data.dni}</TableCell>
-      <TableCell>{data.name}</TableCell>
-      <TableCell>{data.email}</TableCell>
-      <TableCell>
-        <ClientStatusChip status={data.status} />
+      <TableCell component="th" scope="row">
+        <Stack spacing={2} flexDirection="row" alignItems="center">
+          {data.imgUrl ? <Avatar src={data.imgUrl}  variant="square" /> : null}
+          {data.name}
+        </Stack>
       </TableCell>
-      <TableCell>{data.dateOfBirth}</TableCell>
+      <TableCell>
+        {numberWithCommas(data.unitPrice)}
+      </TableCell>  
+      <TableCell>
+        <ProductStatusChip status={data.status} />
+      </TableCell>
+      <TableCell>
+        {data.count}
+      </TableCell>
       <TableCell>
         <ActionsMenuIconButton
           open={openActionsMenu}
@@ -51,20 +60,25 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
       </TableCell>
     </TableRow>
   );
-} 
+};
 
-export interface ClientsTableProps extends Omit<TableRowItemProps, 'data'> {
-  data: Array<ClientType>;
+export interface ProductsTableProps extends Omit<TableRowItemProps, 'data'> {
+  data: Array<ProductType>;
   loading?: boolean;
 }
 
-export const ClientsTable: React.FC<ClientsTableProps> = ({ data, loading, onDelete }) => {
+export const ProductsTable: React.FC<ProductsTableProps> = ({ 
+  data, 
+  loading,
+  onDelete
+}) => {
+
   const content = useMemo(() => {
     if(loading) 
-      return <TableRowLoading colSpan={6} message="Loading Products..." />;
+      return <TableRowLoading colSpan={5} message="Loading Products..." />;
 
     if(!data.length)
-      return <TableRowEmpty colSpan={6} />
+      return <TableRowEmpty colSpan={5} />
       
     return data.map((item) => <TableRowItem key={item.id} data={item} onDelete={onDelete} />)
     
@@ -76,11 +90,10 @@ export const ClientsTable: React.FC<ClientsTableProps> = ({ data, loading, onDel
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>CI</TableCell>
             <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>Unit Price</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Date Of Birth</TableCell>
+            <TableCell>Count</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>

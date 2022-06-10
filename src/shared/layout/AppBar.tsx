@@ -26,7 +26,7 @@ export const AppBar: React.FC<AppBarProps> = ({ toggle }) => {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" noWrap component="div">
-          Responsive drawer
+          Conceptual Dinamyc 
         </Typography>
       </Toolbar>
     </MuiAppBar>
