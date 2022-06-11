@@ -1,22 +1,24 @@
 import React, { useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import { StatusChip } from '../../../shared/components/StatusChip';
-import { ClientStatusEnum, ClientStatusType } from '../clients.types';
+import { OrderStatusEnum, OrderStatusType } from '../orders.types';
 
-interface ClientStatusChipProps {
-  status: ClientStatusType;
+interface OrderStatusChipProps {
+  status: OrderStatusType;
 }
 
-export const ClientStatusChip: React.FC<ClientStatusChipProps> = ({
+export const OrderStatusChip: React.FC<OrderStatusChipProps> = ({
   status,
 }): JSX.Element => {
   const { palette } = useTheme();
   const color = useMemo(() => {
     switch (status) {
-      case ClientStatusEnum.active:
+      case OrderStatusEnum.pending:
         return palette.primary.main;
-      case ClientStatusEnum.inactive:
-        return palette.secondary.main;
+      case OrderStatusEnum.paid:
+        return palette.success.main;
+      case OrderStatusEnum.rejected:
+        return palette.error.main;
       default:
         return palette.grey[400];
     }

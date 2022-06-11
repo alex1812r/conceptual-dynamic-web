@@ -47,6 +47,11 @@ export const theme = createTheme({
         variant: 'outlined',
         fullWidth: true,
       }
+    },
+    MuiDialog: {
+      defaultProps: {
+        fullWidth: true
+      }
     }
   }
 });

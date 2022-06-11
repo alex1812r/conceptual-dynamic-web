@@ -1,53 +1,53 @@
 import React, { useState } from 'react';
 import { Button, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
-import { Inventory as InventoryIcon } from '@mui/icons-material';
-import { ProductsTable } from '../components/ProductsTable';
-import { useCreateProduct, useProductsList } from '../products.hooks';
-import { ProductDialogForm } from '../components/ProductDialogForm';
+import { ShoppingBag as ShoppingIcon } from '@mui/icons-material';
+import { OrdersTable } from '../components/OrdersTable';
+import { useCreateOrder, useOrdersList } from '../orders.hooks';
+import { OrderDialogForm } from '../components/OrderDialogForm';
 import { useSnackbar } from '../../../shared/components/SnackbarProvider';
 
-export const ProductsListView: React.FC = () => {
+export const OrdersListView: React.FC = () => {
+  const { data, loading, refetch } = useOrdersList();
   const [openDialog, setOpenDialog] = useState(false);
   const [snackbar] = useSnackbar();
-  const { data, refetch, loading } = useProductsList();
 
-  const { submit: createProduct, submiting } = useCreateProduct({
+  const { submit, submiting } = useCreateOrder({
     onSuccess: () => {
       setOpenDialog(false);
-      snackbar({ color: 'success', message: 'added client successfully!' });
-      refetch()
+      snackbar({ color: 'success', message: 'added order successfully!' });
+      refetch() 
     },
     onError: (err) => {
       snackbar({ color: 'error', message: err.message })  
     }
-  });
+  })
   
   return (
-    <div>
+    <>
       <Card>
         <CardContent>
           <Stack direction="row" justifyContent="space-between" spacing={2}>
             <Typography display="inline-flex" variant="h5" style={{ alignItems: 'center' }}>
-              <InventoryIcon fontSize="large" style={{ marginRight: 15 }} /> Products List
+              <ShoppingIcon fontSize="large" style={{ marginRight: 15 }} /> Orders List
             </Typography>
             <Button onClick={() => setOpenDialog(true)}>
-              Add Product
+              Add Order
             </Button>
           </Stack>
         </CardContent>
         <Divider />
-        <ProductsTable 
+        <OrdersTable 
           data={data}
-          loading={loading}
           onDelete={() => {}}
+          loading={loading}
         />
-        <ProductDialogForm 
+        <OrderDialogForm 
           open={openDialog}
           onClose={() => setOpenDialog(false)}
-          onSubmit={createProduct}
+          onSubmit={submit}
           submiting={submiting}
         />
       </Card>
-    </div>
-  );
+    </>
+  )
 };

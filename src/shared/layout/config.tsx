@@ -1,4 +1,8 @@
-import { PersonOutline as PersonIcon, Inventory as InventoryIcon } from '@mui/icons-material';
+import { 
+  Person as PersonIcon, 
+  Inventory as InventoryIcon,
+  ShoppingBag as ShoppingIcon
+} from '@mui/icons-material';
 
 export const drawerWidth = 240;
 
@@ -12,5 +16,10 @@ export const sidebarRoutes = [
     name: 'Products',
     icon: <InventoryIcon />,
     href: '/products'
+  },
+  {
+    name: 'Orders',
+    icon: <ShoppingIcon />,
+    href: '/orders'
   }
 ]

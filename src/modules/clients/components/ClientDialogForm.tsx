@@ -46,7 +46,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
     <DialogForm
       open={open}
       onClose={onClose}
-      title="Create Client"
+      title="Add Client"
       onSubmit={handleSubmit(onSubmit)}
       disabledSubmit={disabledSubmit}>
       <Grid container spacing={2}>

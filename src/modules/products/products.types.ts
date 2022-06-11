@@ -23,3 +23,7 @@ export type ProductInputType = {
   unitPrice: number;
   imgUrl?: string;
 }
+
+export type ProductListFilterType = {
+  q?: string;
+}

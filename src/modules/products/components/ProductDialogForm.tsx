@@ -46,7 +46,7 @@ export const ProductDialogForm: React.FC<ProductDialogFormProps> = ({
     <DialogForm
       open={open}
       onClose={onClose}
-      title="Create Product"
+      title="Add Product"
       onSubmit={handleSubmit(onSubmit)}
       disabledSubmit={disabledSubmit}>
       <Grid container spacing={2}>

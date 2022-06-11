@@ -1,8 +1,11 @@
 import { clientApi } from "../../shared/api";
-import { ClientInputType, ClientType } from "./clients.types";
+import { cleanObject } from "../../shared/utils";
+import { ClientInputType, ClientListFilterType, ClientType } from "./clients.types";
 
-export const fetchClientsListAction = async ()  => {
-  const res = await clientApi.get<{ clientsList: Array<ClientType> }>('/clients');
+export const fetchClientsListAction = async (filter: ClientListFilterType)  => {
+  const queryParams = new URLSearchParams(cleanObject(filter)).toString();
+  const fetchUrl = `/clients?${queryParams}`
+  const res = await clientApi.get<{ clientsList: Array<ClientType> }>(fetchUrl);
   return res.data;
 };
 

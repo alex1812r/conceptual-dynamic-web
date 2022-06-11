@@ -26,3 +26,6 @@ export type ClientInputType = {
   dateOfBirth: string;
 }
 
+export type ClientListFilterType = {
+  q?: string
+}

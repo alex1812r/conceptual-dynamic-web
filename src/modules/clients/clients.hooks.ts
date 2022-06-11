@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
 import { createClientAction, fetchClientAction, fetchClientsListAction } from "./clients.actions";
-import { ClientInputType, ClientType } from "./clients.types";
+import { ClientInputType, ClientType, ClientListFilterType } from "./clients.types";
 
-export const useClientsList = () => {
+export const useClientsList = (filter: ClientListFilterType = {}) => {
   const [data, setData] = useState<Array<ClientType>>([]);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
+  const { q } = filter;
+
   const getClientsList = useCallback(() => {
     setLoading(true);
-    fetchClientsListAction()
+    fetchClientsListAction({ q })
       .then((data) => {
         setData(data.clientsList)
       })
@@ -20,7 +22,7 @@ export const useClientsList = () => {
       .finally(() => {
         setLoading(false)
       })
-  }, [snackbar]);
+  }, [q, snackbar]);
 
   useEffect(() => {
     getClientsList();
