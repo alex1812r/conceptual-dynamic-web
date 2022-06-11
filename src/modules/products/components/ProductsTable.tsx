@@ -10,16 +10,16 @@ import { ProductStatusChip } from "./ProductStatusChip";
 
 interface TableRowItemProps {
   data: ProductType
-  onDelete: (id: number) => void;
+  onDelete: (product: ProductType) => void;
 }
 const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
   const [openActionsMenu, setOpenActionsMenu] = useState(false);
   const navigate = useNavigate();
   
   const handleOnDelete = useCallback(() => {
-    onDelete(data.id)
+    onDelete(data)
     setOpenActionsMenu(false)
-  }, [data.id, onDelete])
+  }, [data, onDelete])
 
   const handleOnDetails = useCallback(() => {
     navigate(`/products/${data.id}`)
@@ -38,7 +38,10 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
     <TableRow>
       <TableCell component="th" scope="row">
         <Stack spacing={2} flexDirection="row" alignItems="center">
-          {data.imgUrl ? <Avatar src={data.imgUrl}  variant="square" /> : null}
+          {data.imgUrl 
+            ? <Avatar src={data.imgUrl}  variant="square" style={{ marginRight: 10 }} /> 
+            : null
+          }
           {data.name}
         </Stack>
       </TableCell>

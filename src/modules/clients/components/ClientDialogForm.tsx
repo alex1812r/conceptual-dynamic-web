@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Grid, TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { DatePicker } from '@mui/x-date-pickers';
+import moment from 'moment';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DialogForm } from '../../../shared/components/DialogForm';
 import { initialClientInput } from '../clients.models';
@@ -24,16 +26,16 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
 }) => {
 
   const defaultValues = useMemo(() => {
-    return auxDefaultValues || initialClientInput
+    return auxDefaultValues || {...initialClientInput}
   }, [auxDefaultValues])
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({ 
+  const { register, handleSubmit, reset, formState: { errors }, control } = useForm({ 
     defaultValues,
     resolver: yupResolver(clientSchema)
   })
 
   const disabledSubmit = useMemo(() => {
-    return Boolean(submiting || Object.keys(errors).length) 
+    return Boolean(submiting || Object.entries(errors).length > 0) 
   }, [errors, submiting]);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
       onSubmit={handleSubmit(onSubmit)}
       disabledSubmit={disabledSubmit}>
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <TextField 
             label="Name"
             error={Boolean(errors.name?.message)}
@@ -60,7 +62,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
             }}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <TextField 
             label="Lastname"
             error={Boolean(errors.lastname?.message)}
@@ -70,7 +72,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
             }}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} sm={6}>
           <TextField 
             label="CI"
             error={Boolean(errors.dni?.message)}
@@ -80,17 +82,33 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
             }}
           />
         </Grid>
-        <Grid item md={6}>
-          <TextField 
-            label="Date of Birth"
-            error={Boolean(errors.dateOfBirth?.message)}
-            helperText={errors.dateOfBirth?.message}
-            inputProps={{
-              ...register('dateOfBirth')
+        <Grid item xs={12} sm={6}>
+          <Controller
+            control={control}
+            name="dateOfBirth"
+            render={({ field: { value, onChange } }) => {
+              return (
+                <DatePicker
+                  label="Date of Birth"
+                  inputFormat="YYYY/MM/DD"
+                  value={moment(value)}
+                  onChange={(newMoment) => {
+                    if(newMoment) onChange(newMoment.format('YYYY/MM/DD'))
+                    else onChange('') 
+                  }}
+                  renderInput={(params) => 
+                    <TextField 
+                      {...params}
+                      error={Boolean(errors.dateOfBirth)}
+                      helperText={errors.dateOfBirth?.message}
+                    />
+                  }
+                />
+              );
             }}
           />
         </Grid>
-        <Grid item md={7}>
+        <Grid item xs={12} md={7}>
           <TextField 
             label="email"
             error={Boolean(errors.email?.message)}
@@ -100,7 +118,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
             }}
           />
         </Grid>
-        <Grid item md={5}>
+        <Grid item xs={12} md={5}>
           <TextField 
             label="phone"
             error={Boolean(errors.phone?.message)}

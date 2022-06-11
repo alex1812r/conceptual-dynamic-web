@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
-import { fetchOrdersListAction, fetchOrderAction, createOrderAction } from "./orders.actions";
+import { fetchOrdersListAction, fetchOrderAction, createOrderAction, deleteOrderAction } from "./orders.actions";
 import { OrderInputType, OrderType } from "./orders.types";
 
 export const useOrdersList = () => {
@@ -86,3 +86,27 @@ export const useCreateOrder = ({
 
   return { submiting, submit: createClient }
 };
+
+export const useDeleteOrder = ({
+  onSuccess,
+  onError 
+}: { 
+  onSuccess: (val: boolean) => void, 
+  onError: (err: Error) => void 
+}) => {
+  const [submiting, setSubmiting] = useState(false);
+
+  const deleteOrder = useCallback((id: number) => {
+    setSubmiting(true);
+    deleteOrderAction(id)
+      .then((data) => {
+        onSuccess(data.success)
+      })
+      .catch(onError)
+      .finally(() => {
+        setSubmiting(false);
+      })
+  }, [onError, onSuccess])
+
+  return { submiting, submit: deleteOrder }
+}

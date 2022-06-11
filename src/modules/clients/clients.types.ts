@@ -26,6 +26,10 @@ export type ClientInputType = {
   dateOfBirth: string;
 }
 
+export type UpdateClientInputType = Partial<ClientInputType> & {
+  id: number;
+}
+
 export type ClientListFilterType = {
   q?: string
 }

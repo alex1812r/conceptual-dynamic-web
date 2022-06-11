@@ -1,6 +1,6 @@
 import { clientApi } from "../../shared/api";
 import { cleanObject } from "../../shared/utils";
-import { ClientInputType, ClientListFilterType, ClientType } from "./clients.types";
+import { ClientInputType, ClientListFilterType, ClientType, UpdateClientInputType } from "./clients.types";
 
 export const fetchClientsListAction = async (filter: ClientListFilterType)  => {
   const queryParams = new URLSearchParams(cleanObject(filter)).toString();
@@ -17,4 +17,15 @@ export const fetchClientAction = async (id: number) => {
 export const createClientAction = async (data: ClientInputType) => {
   const res = await clientApi.post<{ client: ClientType }>('/clients', data);
   return res.data
+};
+
+export const updateClientAction = async (data: UpdateClientInputType) => {
+  const { id, ...restData } = data;
+  const res = await clientApi.put<{ client: ClientType }>(`/clients/${id}`, restData);
+  return res.data
 }
+
+export const deleteClientAction = async (id: number) => {
+  const res = await clientApi.delete<{ success: boolean }>(`/clients/${id}`);
+  return res.data
+};

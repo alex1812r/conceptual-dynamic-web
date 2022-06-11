@@ -1,24 +1,25 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import { ClientType } from '../clients.types';
 import { ActionsMenuIconButton } from '../../../shared/components/ActionsMenuIconButton';
 import { ClientStatusChip } from './ClientStatusChip';
-import { useNavigate } from 'react-router-dom';
 import { TableRowLoading } from '../../../shared/components/TableRowLoading';
 import { TableRowEmpty } from '../../../shared/components/TableRowEmpty';
 
 interface TableRowItemProps {
   data: ClientType;
-  onDelete: (id: number) => void;
+  onDelete: (client: ClientType) => void;
 }
 const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
   const [openActionsMenu, setOpenActionsMenu] = useState(false);
   const navigate = useNavigate();
   
   const handleOnDelete = useCallback(() => {
-    onDelete(data.id)
+    onDelete(data)
     setOpenActionsMenu(false)
-  }, [data.id, onDelete])
+  }, [data, onDelete])
 
   const handleOnDetails = useCallback(() => {
     navigate(`/clients/${data.id}`)
@@ -41,7 +42,9 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
       <TableCell>
         <ClientStatusChip status={data.status} />
       </TableCell>
-      <TableCell>{data.dateOfBirth}</TableCell>
+      <TableCell>
+        {moment(data.dateOfBirth).format('YYYY/MM/DD')}
+      </TableCell>
       <TableCell>
         <ActionsMenuIconButton
           open={openActionsMenu}

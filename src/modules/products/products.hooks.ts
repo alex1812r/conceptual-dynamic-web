@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
-import { createProductAction, fetchProductAction, fetchProductsListAction } from "./products.actions";
+import { createProductAction, deleteProductAction, fetchProductAction, fetchProductsListAction } from "./products.actions";
 import { ProductInputType, ProductListFilterType, ProductType } from "./products.types";
 
 export const useProductsList = (filter: ProductListFilterType = {}) => {
@@ -8,9 +8,11 @@ export const useProductsList = (filter: ProductListFilterType = {}) => {
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
+  const { q } = filter;
+
   const getProductsList = useCallback(() => {
     setLoading(true);
-    fetchProductsListAction()
+    fetchProductsListAction({ q })
       .then((data) => {
         setData(data.productsList)
       })
@@ -20,7 +22,7 @@ export const useProductsList = (filter: ProductListFilterType = {}) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [snackbar]);
+  }, [q, snackbar]);
 
   useEffect(() => {
     getProductsList();
@@ -86,3 +88,27 @@ export const useCreateProduct = ({
 
   return { submiting, submit: createProduct }
 };
+
+export const useDeleteProduct = ({
+  onSuccess,
+  onError 
+}: { 
+  onSuccess: (val: boolean) => void, 
+  onError: (err: Error) => void 
+}) => {
+  const [submiting, setSubmiting] = useState(false);
+
+  const deleteProduct = useCallback((id: number) => {
+    setSubmiting(true);
+    deleteProductAction(id)
+      .then((data) => {
+        onSuccess(data.success)
+      })
+      .catch(onError)
+      .finally(() => {
+        setSubmiting(false);
+      })
+  }, [onError, onSuccess])
+
+  return { submiting, submit: deleteProduct }
+}

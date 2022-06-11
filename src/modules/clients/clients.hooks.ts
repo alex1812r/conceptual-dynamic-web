@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
-import { createClientAction, fetchClientAction, fetchClientsListAction } from "./clients.actions";
-import { ClientInputType, ClientType, ClientListFilterType } from "./clients.types";
+import { createClientAction, deleteClientAction, fetchClientAction, fetchClientsListAction, updateClientAction } from "./clients.actions";
+import { ClientInputType, ClientType, ClientListFilterType, UpdateClientInputType } from "./clients.types";
 
 export const useClientsList = (filter: ClientListFilterType = {}) => {
   const [data, setData] = useState<Array<ClientType>>([]);
@@ -88,3 +88,51 @@ export const useCreateClient = ({
 
   return { submiting, submit: createClient }
 };
+
+export const useUpdateClient = ({
+  onSuccess,
+  onError 
+}: { 
+  onSuccess: (data: ClientType) => void, 
+  onError: (err: Error) => void 
+}) => {
+  const [submiting, setSubmiting] = useState(false);
+
+  const updateClient = useCallback((input: UpdateClientInputType) => {
+    setSubmiting(true);
+    updateClientAction(input)
+      .then((data) => {
+        onSuccess(data.client)
+      })
+      .catch(onError)
+      .finally(() => {
+        setSubmiting(false);
+      })
+  }, [onError, onSuccess])
+
+  return { submiting, submit: updateClient }
+}
+
+export const useDeleteClient = ({
+  onSuccess,
+  onError 
+}: { 
+  onSuccess: (val: boolean) => void, 
+  onError: (err: Error) => void 
+}) => {
+  const [submiting, setSubmiting] = useState(false);
+
+  const deleteClient = useCallback((id: number) => {
+    setSubmiting(true);
+    deleteClientAction(id)
+      .then((data) => {
+        onSuccess(data.success)
+      })
+      .catch(onError)
+      .finally(() => {
+        setSubmiting(false);
+      })
+  }, [onError, onSuccess])
+
+  return { submiting, submit: deleteClient }
+}

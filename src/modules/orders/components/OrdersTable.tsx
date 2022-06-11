@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import { ActionsMenuIconButton } from '../../../shared/components/ActionsMenuIconButton';
 import { TableRowLoading } from '../../../shared/components/TableRowLoading';
 import { TableRowEmpty } from '../../../shared/components/TableRowEmpty';
@@ -10,16 +11,16 @@ import { numberWithCommas } from '../../../shared/utils';
 
 interface TableRowItemProps {
   data: OrderType;
-  onDelete: (id: number) => void;
+  onDelete: (order: OrderType) => void;
 }
 const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
   const [openActionsMenu, setOpenActionsMenu] = useState(false);
   const navigate = useNavigate();
   
   const handleOnDelete = useCallback(() => {
-    onDelete(data.id)
+    onDelete(data)
     setOpenActionsMenu(false)
-  }, [data.id, onDelete])
+  }, [data, onDelete])
 
   const handleOnDetails = useCallback(() => {
     navigate(`/orders/${data.id}`)
@@ -38,6 +39,9 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
     <TableRow>
       <TableCell component="th" scope="row">{data.id}</TableCell>
       <TableCell>{data.client?.name}</TableCell>
+      <TableCell>
+        {moment(data.orderDate).format('YYYY/MM/DD')}
+      </TableCell>
       <TableCell>
         <OrderStatusChip status={data.status} />
       </TableCell>
@@ -80,6 +84,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({ data, loading, onDelet
           <TableRow>
             <TableCell>#</TableCell>
             <TableCell>Client</TableCell>
+            <TableCell>Order Date</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Total</TableCell>
             <TableCell>Actions</TableCell>

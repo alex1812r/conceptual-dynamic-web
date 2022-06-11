@@ -6,6 +6,8 @@ import {
   AddCircleOutline as AddIcon, 
   RemoveCircleOutline as RemoveIcon
 } from '@mui/icons-material';
+import { DatePicker } from '@mui/x-date-pickers';
+import moment from 'moment';
 import { DialogForm } from '../../../shared/components/DialogForm';
 import { OrderInputType } from '../orders.types';
 import { initialOrderInput } from '../orders.models';
@@ -30,7 +32,7 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
 }) => {
 
   const defaultValues = useMemo(() => {
-    return auxDefaultValues || initialOrderInput
+    return auxDefaultValues || {...initialOrderInput}
   }, [auxDefaultValues])
 
   const { 
@@ -127,7 +129,7 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
       onSubmit={handleSubmit(onSubmit)}
       disabledSubmit={disabledSubmit}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={8}>
           <Controller
             control={control}
             name="clientId"
@@ -150,6 +152,32 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
                   }}
                 />
               )
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <Controller
+            control={control}
+            name="orderDate"
+            render={({ field: { value, onChange } }) => {
+              return (
+                <DatePicker
+                  label="Order Date"
+                  inputFormat="YYYY/MM/DD"
+                  value={moment(value)}
+                  onChange={(newMoment) => {
+                    if(newMoment) onChange(newMoment.format('YYYY/MM/DD'))
+                    else onChange('') 
+                  }}
+                  renderInput={(params) => 
+                    <TextField 
+                      {...params}
+                      error={Boolean(errors.orderDate)}
+                      helperText={errors.orderDate?.message}
+                    />
+                  }
+                />
+              );
             }}
           />
         </Grid>
