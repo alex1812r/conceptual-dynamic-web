@@ -42,6 +42,7 @@ export const useClientDetails = ({ id }: { id: number }) => {
   const [snackbar] = useSnackbar();
 
   const getClient = useCallback(() => {
+    setLoading(true);
     fetchClientAction(id)
       .then((data) => {
         setData(data.client)
