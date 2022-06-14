@@ -39,7 +39,7 @@ export const useOrderDetails = ({ id }: { id: number }) => {
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
-  const getClient = useCallback(() => {
+  const getOrder = useCallback(() => {
     setLoading(true);
     fetchOrderAction(id)
       .then((data) => {
@@ -54,12 +54,12 @@ export const useOrderDetails = ({ id }: { id: number }) => {
   }, [id, snackbar]);
 
   useEffect(() => {
-    getClient();
-  }, [getClient]);
+    getOrder();
+  }, [getOrder]);
 
   return { 
     data, 
-    refetch: getClient,
+    refetch: getOrder,
     loading
   };
 };
