@@ -1,4 +1,5 @@
 import { BaseEntityType } from "../../shared/types";
+import { OrderType } from "../orders/orders.types";
 
 export enum ClientStatusEnum {
   active = 'active',
@@ -15,6 +16,7 @@ export type ClientType = BaseEntityType & {
   phone?: string;
   dateOfBirth: string;
   status: ClientStatusType;
+  orders?: Array<OrderType>
 }
 
 export type ClientInputType = {
