@@ -42,6 +42,7 @@ export const useProductDetails = ({ id }: { id: number }) => {
   const [snackbar] = useSnackbar();
 
   const getProduct = useCallback(() => {
+    setLoading(true)
     fetchProductAction(id)
       .then((data) => {
         setData(data.product)
