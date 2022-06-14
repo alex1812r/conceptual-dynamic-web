@@ -40,6 +40,7 @@ export const useOrderDetails = ({ id }: { id: number }) => {
   const [snackbar] = useSnackbar();
 
   const getClient = useCallback(() => {
+    setLoading(true);
     fetchOrderAction(id)
       .then((data) => {
         setData(data.order)

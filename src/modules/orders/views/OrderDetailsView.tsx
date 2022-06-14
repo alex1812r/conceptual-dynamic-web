@@ -8,7 +8,8 @@ export const OrderDetailsView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data, loading } = useOrderDetails({ id: Number(id) })
   
-  if(loading) return <PageLoader message="Loading Order..." />
+  if(loading) return <PageLoader message="Loading Order..." />;
+  else if(!data) return <>Order Not found</>;
 
   return (
     <Card>
