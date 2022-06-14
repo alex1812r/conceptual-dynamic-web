@@ -35,7 +35,7 @@ export const useOrdersList = () => {
 
 
 export const useOrderDetails = ({ id }: { id: number }) => {
-  const [data, setData] = useState<any | null>(null);
+  const [data, setData] = useState<OrderType | null>(null);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 

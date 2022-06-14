@@ -194,6 +194,18 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
             <AddIcon />
           </IconButton>
         </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Description"
+            multiline
+            rows={5}
+            error={Boolean(errors.description)}
+            helperText={errors.description?.message}
+            inputProps={{
+              ...register('description'),
+            }}
+          />
+        </Grid>
       </Grid>
     </DialogForm>
   )

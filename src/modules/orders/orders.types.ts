@@ -16,7 +16,8 @@ export type OrderType = BaseEntityType & {
   total: number;
   status: OrderStatusType;
   orderDate: string;
-  orderProducts: Array<OrderProductType>;
+  description: string;
+  orderProducts?: Array<OrderProductType>;
 }
 
 export type OrderProductType = BaseEntityType & {
@@ -24,11 +25,14 @@ export type OrderProductType = BaseEntityType & {
   order?: OrderType
   productId: number;
   product?: ProductType;
+  count: number;
+  amount: number;
 }
 
 export type OrderInputType = { 
   clientId: number;
   orderDate: string;
+  description?: string;
   orderProducts: Array<{
     productId: number;
     count: number;
