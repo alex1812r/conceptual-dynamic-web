@@ -23,11 +23,20 @@ export const theme = createTheme({
         }
       }
     },
+    MuiTableBody: {
+      styleOverrides: {
+        root: {
+          '& tr:last-child .MuiTableCell-root': {
+            borderBottom: 'none'
+          }
+        }
+      }
+    },
     MuiTableCell: {
       styleOverrides: {
         head: {
           fontWeight: 600
-        }
+        },
       }
     },
     MuiButton: {

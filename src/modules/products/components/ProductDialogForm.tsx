@@ -32,9 +32,7 @@ export const ProductDialogForm: React.FC<ProductDialogFormProps> = ({
     resolver: yupResolver(productSchema)
   })
 
-  const disabledSubmit = useMemo(() => {
-    return Boolean(submiting || Object.keys(errors).length) 
-  }, [errors, submiting]);
+  const disabledSubmit = Boolean(submiting || Object.keys(errors).length) 
 
   useEffect(() => {
     if(!open) {
@@ -48,7 +46,8 @@ export const ProductDialogForm: React.FC<ProductDialogFormProps> = ({
       onClose={onClose}
       title="Add Product"
       onSubmit={handleSubmit(onSubmit)}
-      disabledSubmit={disabledSubmit}>
+      disabledSubmit={disabledSubmit}
+      submiting={submiting}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField 

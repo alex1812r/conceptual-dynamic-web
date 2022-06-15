@@ -46,9 +46,13 @@ export const DialogForm: React.FC<DialogFormProps> = ({
     ) : null;
   }, [palette.common.white, submiting]);
 
+  const handleSubmit = useMemo(() => {
+    if(!submiting && onSubmit) return (e: React.FormEvent<HTMLFormElement>) => onSubmit(e)
+  }, [onSubmit, submiting])
+
   return (
     <Dialog {...restProps}>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <DialogContent>
           <Typography variant="h5" style={{ margin: 0 }}>
             {title}

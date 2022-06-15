@@ -1,12 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
-import { ShoppingBag as ShoppingIcon } from '@mui/icons-material';
-import { OrdersTable } from '../components/OrdersTable';
 import { useCreateOrder, useDeleteOrder, useOrdersList } from '../orders.hooks';
 import { OrderDialogForm } from '../components/OrderDialogForm';
 import { useSnackbar } from '../../../shared/components/SnackbarProvider';
 import { OrderType } from '../orders.types';
 import { DialogConfirm } from '../../../shared/components/DialogConfirm';
+import { OrdersCrudTableCard } from '../components/OrdersCrudTableCard';
 
 export const OrdersListView: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -58,39 +56,28 @@ export const OrdersListView: React.FC = () => {
   
   return (
     <>
-      <Card>
-        <CardContent>
-          <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Typography display="inline-flex" variant="h5" style={{ alignItems: 'center' }}>
-              <ShoppingIcon fontSize="large" style={{ marginRight: 15 }} /> Orders List
-            </Typography>
-            <Button onClick={() => setOpenDialog(true)}>
-              Add Order
-            </Button>
-          </Stack>
-        </CardContent>
-        <Divider />
-        <OrdersTable 
-          data={data}
-          onDelete={onDeleteOrder}
-          loading={loading}
-        />
-        <OrderDialogForm 
-          open={openDialog}
-          onClose={() => setOpenDialog(false)}
-          onSubmit={submit}
-          submiting={submiting}
-        />
-        <DialogConfirm 
-          title="Delete Order"
-          open={openConfirmDialog}
-          onCancel={cancelDeleteOrder}
-          onConfirm={confirmDeleteOrder}
-          confirming={deletingOrder}
-        >
-          are you sure you want to delete this Order?
-        </DialogConfirm>
-      </Card>
+      <OrdersCrudTableCard 
+        onAdd={() => setOpenDialog(true)}
+        onDelete={onDeleteOrder}
+        onEdit={() => {}}
+        data={data}
+        loading={loading}
+      />
+      <OrderDialogForm 
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onSubmit={submit}
+        submiting={submiting}
+      />
+      <DialogConfirm 
+        title="Delete Order"
+        open={openConfirmDialog}
+        onCancel={cancelDeleteOrder}
+        onConfirm={confirmDeleteOrder}
+        confirming={deletingOrder}
+      >
+        are you sure you want to delete this Order?
+      </DialogConfirm>
     </>
   )
 };

@@ -51,10 +51,12 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
     remove,
   } = useFieldArray({ control, name: 'orderProducts' })
 
-  const disabledSubmit = useMemo(() => {
-    const { orderProducts: orderProductsErrors, ...restErrors } = errors;
-    return Boolean(submiting || Object.keys(restErrors).length || orderProductsErrors?.length) 
-  }, [errors, submiting]);
+  const { orderProducts: orderProductsErrors, ...restErrors } = errors;
+
+  const disabledSubmit = Boolean(
+    Object.entries(restErrors).length ||
+    (orderProductsErrors ? Object.entries(orderProductsErrors).length : false)
+  );
 
   useEffect(() => {
     if(!open) {
@@ -127,7 +129,8 @@ export const OrderDialogForm: React.FC<OrderDialogFormProps> = ({
       onClose={onClose}
       title="Add Order"
       onSubmit={handleSubmit(onSubmit)}
-      disabledSubmit={disabledSubmit}>
+      disabledSubmit={disabledSubmit}
+      submiting={submiting}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <Controller

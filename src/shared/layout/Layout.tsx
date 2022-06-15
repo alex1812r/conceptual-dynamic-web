@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Toolbar } from '@mui/material';
+import { Box, Stack, Toolbar } from '@mui/material';
 import { AppBar } from './AppBar';
 import { drawerWidth } from './config';
 import { Sidebar } from './Sisebar';
@@ -23,7 +23,7 @@ export const Layout: React.FC<LayoutProps> = ({ window, children }) => {
   [window]);
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
       <AppBar toggle={handleDrawerToggle} />
       <Sidebar 
         mobileOpen={mobileOpen}
@@ -32,10 +32,18 @@ export const Layout: React.FC<LayoutProps> = ({ window, children }) => {
       />
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        overflow="hidden"
+        sx={{ 
+          flexGrow: 1, 
+          width: { sm: `calc(100% - ${drawerWidth}px)` },
+        }}
       >
-        <Toolbar />
-        {children}
+        <Stack height="100%">
+          <Toolbar />
+          <Box flexGrow={1} sx={{ p: 3 }} overflow="auto">
+            {children}
+          </Box>
+        </Stack>
       </Box>
     </Box>
   );

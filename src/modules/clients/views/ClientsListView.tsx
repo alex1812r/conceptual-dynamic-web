@@ -1,12 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { Button, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
-import { Person as PersonIcon } from '@mui/icons-material';
 import { useClientsList, useCreateClient, useDeleteClient } from "../clients.hooks";
-import { ClientsTable } from "../components/ClientsTable";
 import { ClientDialogForm } from "../components/ClientDialogForm";
 import { DialogConfirm } from "../../../shared/components/DialogConfirm";
 import { useSnackbar } from "../../../shared/components/SnackbarProvider";
 import { ClientType } from "../clients.types";
+import { ClientsCrudTableCard } from "../components/ClientsCrudTableCard";
 
 export const ClientsListView: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -60,25 +58,14 @@ export const ClientsListView: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <Card>
-        <CardContent>
-          <Stack direction="row" justifyContent="space-between" spacing={2}>
-            <Typography display="inline-flex" variant="h5" style={{ alignItems: 'center' }}>
-              <PersonIcon fontSize="large" style={{ marginRight: 15 }} /> Clients List
-            </Typography>
-            <Button onClick={() => setOpenDialog(true)}>
-              Add Client
-            </Button>
-          </Stack>
-        </CardContent>
-        <Divider />
-        <ClientsTable
-          data={data} 
-          loading={loading} 
-          onDelete={onDeleteClient}  
-        />
-      </Card>
+    <>
+      <ClientsCrudTableCard 
+         onAdd={() => setOpenDialog(true)}
+         onDelete={onDeleteClient}
+         onEdit={() => {}}
+         data={data}
+         loading={loading}
+      />
       <ClientDialogForm 
         open={openDialog}
         onClose={() => setOpenDialog(false)}
@@ -95,6 +82,6 @@ export const ClientsListView: React.FC = () => {
       >
         are you sure you want to delete this client?
       </DialogConfirm>
-    </div>
+    </>
   );
 }

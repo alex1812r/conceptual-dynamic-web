@@ -31,12 +31,10 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
 
   const { register, handleSubmit, reset, formState: { errors }, control } = useForm({ 
     defaultValues,
-    resolver: yupResolver(clientSchema)
+    resolver: yupResolver(clientSchema),
   })
 
-  const disabledSubmit = useMemo(() => {
-    return Boolean(submiting || Object.entries(errors).length > 0) 
-  }, [errors, submiting]);
+  const disabledSubmit = Boolean(Object.entries(errors).length);
 
   useEffect(() => {
     if(!open) {
@@ -50,7 +48,8 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
       onClose={onClose}
       title="Add Client"
       onSubmit={handleSubmit(onSubmit)}
-      disabledSubmit={disabledSubmit}>
+      disabledSubmit={disabledSubmit}
+      submiting={submiting}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField 
