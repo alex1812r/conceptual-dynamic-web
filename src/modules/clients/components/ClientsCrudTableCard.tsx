@@ -6,11 +6,13 @@ import { CrudProps } from '../../../shared/components/CrudTable';
 import { useNavigate } from 'react-router-dom';
 import { CrudTableCard } from '../../../shared/components/CrudTableCard';
 import { ClientStatusChip } from './ClientStatusChip';
+import { PaginationType } from '../../../shared/hooks';
 
 interface ClientsCrudTableCardProps extends Omit<CrudProps<ClientType>, 'onRead'>{
   data: Array<ClientType>
   onAdd: () => void;
-  loading?: boolean
+  loading?: boolean;
+  pagination: PaginationType
 }
 
 
@@ -19,7 +21,8 @@ export const ClientsCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
   onAdd,
   onEdit,
   onDelete,
-  loading
+  loading,
+  pagination
 }) => {
   const navigate = useNavigate();
   
@@ -36,6 +39,7 @@ export const ClientsCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
       onEdit={(v: ClientType) => onEdit(v)}
       data={data}
       loading={loading}
+      pagination={pagination}
       columns={[
         {
           title: 'CI',

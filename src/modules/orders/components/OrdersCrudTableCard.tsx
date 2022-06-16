@@ -7,11 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { CrudTableCard } from '../../../shared/components/CrudTableCard';
 import { OrderStatusChip } from './OrderStatusChip';
 import { numberWithCommas } from '../../../shared/utils';
+import { PaginationType } from '../../../shared/hooks';
 
 interface ClientsCrudTableCardProps extends Omit<CrudProps<OrderType>, 'onRead'>{
   data: Array<OrderType>
   onAdd: () => void;
-  loading?: boolean
+  loading?: boolean;
+  pagination?: PaginationType
 }
 
 export const OrdersCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
@@ -19,16 +21,17 @@ export const OrdersCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
   onAdd,
   onEdit,
   onDelete,
-  loading
+  loading,
+  pagination
 }) => {
   const navigate = useNavigate();
   
   return (
     <>
       <CrudTableCard 
-        title="Clients List"
+        title="Orders List"
         icon={<ShoppingIcon fontSize="large" />}
-        addButtonText="Add Client"
+        addButtonText="Add Order"
         onAdd={onAdd}
         onRead={(v: OrderType) => {
           navigate(`/orders/${v.id}`);
@@ -37,6 +40,7 @@ export const OrdersCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
         onEdit={(v: OrderType) => onEdit(v)}
         data={data}
         loading={loading}
+        pagination={pagination}
         columns={[
           {
             title: '#',
@@ -46,7 +50,8 @@ export const OrdersCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
             title: 'Client',
             field: 'client',
             render: (item: OrderType) => {
-              return item.client?.name
+
+              return `${item.client?.name} ${item.client?.lastname}` 
             }
           },
           {

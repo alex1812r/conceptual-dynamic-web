@@ -1,11 +1,22 @@
 import { clientApi } from "../../shared/api";
-import { cleanObject } from "../../shared/utils";
+import { cleanObject, getPaginateParamsByPage } from "../../shared/utils";
 import { ClientInputType, ClientListFilterType, ClientType, UpdateClientInputType } from "./clients.types";
 
 export const fetchClientsListAction = async (filter: ClientListFilterType)  => {
-  const queryParams = new URLSearchParams(cleanObject(filter)).toString();
+  const { page, perPage, ...restFilter } = filter;
+
+  const queryParams = new URLSearchParams(cleanObject({
+    ...getPaginateParamsByPage(page, perPage), 
+    ...restFilter
+  })).toString();
+
   const fetchUrl = `/clients?${queryParams}`
-  const res = await clientApi.get<{ clientsList: Array<ClientType> }>(fetchUrl);
+
+  const res = await clientApi.get<{ 
+    clientsList: Array<ClientType>;
+    count: number
+  }>(fetchUrl);
+  
   return res.data;
 };
 

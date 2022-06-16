@@ -1,17 +1,26 @@
-import React, { useCallback, useState } from "react";
-import { useClientsList, useCreateClient, useDeleteClient } from "../clients.hooks";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useClientsList, useCreateClient, useDeleteClient, useUpdateClient } from "../clients.hooks";
 import { ClientDialogForm } from "../components/ClientDialogForm";
 import { DialogConfirm } from "../../../shared/components/DialogConfirm";
 import { useSnackbar } from "../../../shared/components/SnackbarProvider";
-import { ClientType } from "../clients.types";
+import { ClientInputType, ClientType } from "../clients.types";
 import { ClientsCrudTableCard } from "../components/ClientsCrudTableCard";
+import { usePagination } from "../../../shared/hooks";
 
 export const ClientsListView: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [selectedClient, setSelectedClient] = useState<ClientType | undefined>();
-  const [snackbar] = useSnackbar()
-  const { data, refetch, loading } = useClientsList();
+  const [snackbar] = useSnackbar();
+  const pagination = usePagination();
+  const { data: clientsList, refetch, loading, count } = useClientsList({
+    page: pagination.page,
+    perPage: pagination.perPage,
+  });
+
+  useEffect(() => {
+    pagination.setItemsCount(count);
+  }, [count, pagination]);
 
   const { 
     submit: createClient, 
@@ -20,6 +29,20 @@ export const ClientsListView: React.FC = () => {
     onSuccess: () => {
       setOpenDialog(false);
       snackbar({ color: 'success', message: 'added client successfully!' });
+      refetch()
+    },
+    onError: (err) => {
+      snackbar({ color: 'error', message: err.message })  
+    }
+  });
+
+  const {
+    submit: updateClient,
+    submiting: updatingClient
+  } = useUpdateClient({
+    onSuccess: () => {
+      setOpenDialog(false);
+      snackbar({ color: 'success', message: 'updated client successfully!' });
       refetch()
     },
     onError: (err) => {
@@ -41,6 +64,23 @@ export const ClientsListView: React.FC = () => {
     }
   });
 
+  const submitingClient = useMemo(() => 
+    updatingClient || creatingClient  
+  , [creatingClient, updatingClient])
+
+  const onSubmitClient = useCallback((input: ClientInputType) => {
+    if(selectedClient) updateClient({
+      id: selectedClient.id,
+      ...input
+    });
+    else createClient(input)
+  }, [createClient, selectedClient, updateClient])
+
+  const onEditClient = useCallback((client: ClientType) => {
+    setSelectedClient(client);
+    setOpenDialog(true)
+  }, [])
+
   const onDeleteClient = useCallback((client: ClientType) => {
     setSelectedClient(client);
     setOpenConfirmDialog(true)
@@ -53,25 +93,32 @@ export const ClientsListView: React.FC = () => {
   }, [deleteClient, deletingClient, selectedClient]);
 
   const cancelDeleteClient = useCallback(() => {
-    setSelectedClient(undefined);
     setOpenConfirmDialog(false);
+    setSelectedClient(undefined);
+  }, []);
+  
+  const onCloseDialogForm = useCallback(() => {
+    setOpenDialog(false);
+    setSelectedClient(undefined);
   }, []);
 
   return (
     <>
-      <ClientsCrudTableCard 
+      <ClientsCrudTableCard
          onAdd={() => setOpenDialog(true)}
          onDelete={onDeleteClient}
-         onEdit={() => {}}
-         data={data}
+         onEdit={onEditClient}
+         data={clientsList}
          loading={loading}
+         pagination={pagination}
       />
-      <ClientDialogForm 
+      <ClientDialogForm
         open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        onSubmit={createClient}
-        submiting={creatingClient}
+        onClose={onCloseDialogForm}
+        onSubmit={onSubmitClient}
+        submiting={submitingClient}
         defaultValues={selectedClient}
+        edit={Boolean(selectedClient)}
       />
       <DialogConfirm 
         title="Delete Client"

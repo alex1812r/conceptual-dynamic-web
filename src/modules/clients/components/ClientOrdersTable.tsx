@@ -58,7 +58,7 @@ export const ClientOrdersTable: React.FC<ClientOrdersTableProps> = ({ data }) =>
             <TableCell>Order Date</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Total</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell>View</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

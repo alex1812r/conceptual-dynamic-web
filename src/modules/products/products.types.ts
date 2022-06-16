@@ -1,4 +1,4 @@
-import { BaseEntityType } from "../../shared/types";
+import { BaseEntityType, BaseFilterType, FileInputType, FileType } from "../../shared/types";
 
 export enum ProductStatusEnum {
   available = 'available',
@@ -13,7 +13,8 @@ export type ProductType = BaseEntityType & {
   description?: string;
   unitPrice: number;
   status: ProductStatusType;
-  imgUrl: string;
+  imageId?: string;
+  image?: FileType;
 }
 
 export type ProductInputType = {
@@ -21,9 +22,12 @@ export type ProductInputType = {
   count: number;
   description?: string;
   unitPrice: number;
-  imgUrl?: string;
+  image?: FileInputType
 }
 
-export type ProductListFilterType = {
-  q?: string;
+export type UpdateProductInputType = Partial<Omit<ProductInputType, 'image'>> & {
+  id: number;
+  updateImage?: FileInputType
 }
+
+export type ProductListFilterType = BaseFilterType & {}

@@ -66,3 +66,39 @@ export const useFilestack = (
 
   return { pick, isLoading, files: uploadFiles };
 };
+
+export interface PaginationProps {
+  page?: number;
+  perPage?: number;
+}
+
+export type PaginationType = {
+  page: number;
+  setPage: (n: number) => void;
+  perPage: number;
+  setPerPage: (n: number) => void;
+  totalPages: number;
+  setItemsCount: (n: number) => void;
+};
+
+export function usePagination(
+  props: PaginationProps = {},
+): PaginationType {
+  const [page, setPage] = useState(props.page || 1);
+  const [perPage, setPerPage] = useState(props.perPage || 20);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsCount, setItemsCount] = useState(0);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(itemsCount / perPage));
+  }, [perPage, itemsCount]);
+
+  return {
+    page,
+    setPage,
+    perPage,
+    setPerPage,
+    totalPages,
+    setItemsCount,
+  };
+}

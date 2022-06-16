@@ -1,4 +1,4 @@
-import { BaseEntityType } from "../../shared/types";
+import { BaseEntityType, BaseFilterType } from "../../shared/types";
 import { ClientType } from "../clients/clients.types";
 import { ProductType } from "../products/products.types";
 
@@ -38,3 +38,5 @@ export type OrderInputType = {
     count: number;
   }>;
 }
+
+export type OrdersFilterType = BaseFilterType & {}

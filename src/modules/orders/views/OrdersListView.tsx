@@ -1,17 +1,26 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useCreateOrder, useDeleteOrder, useOrdersList } from '../orders.hooks';
 import { OrderDialogForm } from '../components/OrderDialogForm';
 import { useSnackbar } from '../../../shared/components/SnackbarProvider';
 import { OrderType } from '../orders.types';
 import { DialogConfirm } from '../../../shared/components/DialogConfirm';
 import { OrdersCrudTableCard } from '../components/OrdersCrudTableCard';
+import { usePagination } from '../../../shared/hooks';
 
 export const OrdersListView: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderType | undefined>();
-  const { data, loading, refetch } = useOrdersList();
+  const pagination = usePagination();
+  const { data, loading, refetch, count } = useOrdersList({
+    page: pagination.page,
+    perPage: pagination.perPage
+  });
   const [snackbar] = useSnackbar();
+
+  useEffect(() => {
+    pagination.setItemsCount(count);
+  }, [count, pagination]);
 
   const { submit, submiting } = useCreateOrder({
     onSuccess: () => {
@@ -62,6 +71,7 @@ export const OrdersListView: React.FC = () => {
         onEdit={() => {}}
         data={data}
         loading={loading}
+        pagination={pagination}
       />
       <OrderDialogForm 
         open={openDialog}

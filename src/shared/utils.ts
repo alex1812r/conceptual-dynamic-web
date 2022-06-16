@@ -10,3 +10,13 @@ export function cleanObject(obj: { [k: string]: any }) {
   Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
   return obj;
 }
+
+export const getPaginateParamsByPage = (
+  page?: number,
+  perPage?: number,
+): { skip: number | undefined; take: number | undefined } => {
+  const skip = 
+    typeof page === 'number' && typeof perPage === 'number' 
+    ? (page - 1) * perPage : undefined; 
+  return { skip, take: perPage };
+};

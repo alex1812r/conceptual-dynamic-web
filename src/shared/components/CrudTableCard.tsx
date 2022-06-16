@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button, Card, CardContent, Divider, Pagination, Stack, Typography, Box } from '@mui/material';
 import { CustomTable, CustomTableProps } from './CrudTable';
+import { PaginationType } from '../hooks';
 
 export interface CrudTableCardProps extends CustomTableProps {
   title: string;
   icon?: React.ReactNode;
-  addButtonText?: string
-  onAdd: () => void
+  addButtonText?: string;
+  onAdd: () => void;
+  pagination?: PaginationType
 }
 
 export const CrudTableCard: React.FC<CrudTableCardProps> = ({
@@ -20,7 +22,28 @@ export const CrudTableCard: React.FC<CrudTableCardProps> = ({
   onDelete,
   onEdit,
   onRead,
+  pagination
 }) => {
+
+  const paginationContent = useMemo(() => {
+    if(!pagination) return null;
+    
+    return (
+      <CardContent>
+        <Stack flexDirection="row" justifyContent="center">
+          <Pagination 
+            page={pagination.page}
+            count={pagination.totalPages}
+            onChange={(_e, page) => pagination.setPage(page)}
+            showFirstButton
+            showLastButton
+            color="primary"
+          />
+        </Stack>
+      </CardContent>
+    )
+  }, [pagination])
+
   return (
     <Card 
       style={{ 
@@ -56,11 +79,7 @@ export const CrudTableCard: React.FC<CrudTableCardProps> = ({
           onRead={onRead}
         />
       </Box>
-      <CardContent>
-        <Stack flexDirection="row" justifyContent="center">
-          <Pagination count={10} color="primary" />
-        </Stack>
-      </CardContent>
+      {paginationContent}
     </Card>
   )
 }

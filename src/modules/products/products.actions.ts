@@ -1,11 +1,22 @@
 import { clientApi } from "../../shared/api";
-import { cleanObject } from "../../shared/utils";
-import { ProductInputType, ProductListFilterType, ProductType } from "./products.types";
+import { cleanObject, getPaginateParamsByPage } from "../../shared/utils";
+import { ProductInputType, ProductListFilterType, ProductType, UpdateProductInputType } from "./products.types";
 
-export const fetchProductsListAction = async (filter: ProductListFilterType = {})  => {
-  const queryParams = new URLSearchParams(cleanObject(filter)).toString();
-  const fetchUrl = `/products?${queryParams}`
-  const res = await clientApi.get<{ productsList: Array<ProductType> }>(fetchUrl);
+export const fetchProductsListAction = async (filter: ProductListFilterType = {})  => { 
+  const { page, perPage, ...restFilter } = filter;
+
+  const queryParams = new URLSearchParams(cleanObject({
+    ...getPaginateParamsByPage(page, perPage), 
+    ...restFilter
+  })).toString();
+
+  const fetchUrl = `/products?${queryParams}`;
+
+  const res = await clientApi.get<{ 
+    productsList: Array<ProductType>;
+    count: number;
+  }>(fetchUrl);
+
   return res.data;
 };
 
@@ -18,6 +29,12 @@ export const createProductAction = async (input: ProductInputType) => {
   const res = await clientApi.post<{ product: ProductType }>('/products', input);
   return res.data;
 };
+
+export const updateProductAction = async (data: UpdateProductInputType) => {
+  const { id, ...restData } = data;
+  const res = await clientApi.put<{ product: ProductType }>(`/products/${id}`, restData);
+  return res.data
+}
 
 export const deleteProductAction = async (id: number) => {
   const res = await clientApi.delete<{ success: boolean }>(`/products/${id}`);

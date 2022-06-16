@@ -5,16 +5,18 @@ import { ClientInputType, ClientType, ClientListFilterType, UpdateClientInputTyp
 
 export const useClientsList = (filter: ClientListFilterType = {}) => {
   const [data, setData] = useState<Array<ClientType>>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
-  const { q } = filter;
+  const { q, page, perPage } = filter;
 
   const getClientsList = useCallback(() => {
     setLoading(true);
-    fetchClientsListAction({ q })
+    fetchClientsListAction({ q, page, perPage })
       .then((data) => {
         setData(data.clientsList)
+        setCount(data.count);
       })
       .catch((err: Error) => {
         snackbar({ color: 'error', message: err.message })
@@ -22,7 +24,7 @@ export const useClientsList = (filter: ClientListFilterType = {}) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [q, snackbar]);
+  }, [q, page, perPage, snackbar]);
 
   useEffect(() => {
     getClientsList();
@@ -31,7 +33,8 @@ export const useClientsList = (filter: ClientListFilterType = {}) => {
   return { 
     data, 
     refetch: getClientsList,
-    loading
+    loading,
+    count
   };
 }
 

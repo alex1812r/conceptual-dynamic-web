@@ -1,8 +1,21 @@
 import { clientApi } from "../../shared/api";
-import { OrderInputType, OrderType } from "./orders.types";
+import { cleanObject, getPaginateParamsByPage } from "../../shared/utils";
+import { OrderInputType, OrdersFilterType, OrderType } from "./orders.types";
 
-export const fetchOrdersListAction = async ()  => {
-  const res = await clientApi.get<{ ordersList: Array<OrderType> }>('/orders');
+export const fetchOrdersListAction = async (filter: OrdersFilterType = {})  => {
+  const { page, perPage, ...restFilter } = filter;
+
+  const queryParams = new URLSearchParams(cleanObject({
+    ...getPaginateParamsByPage(page, perPage), 
+    ...restFilter
+  })).toString();
+
+  const fetchUrl = `/orders?${queryParams}`;
+  
+  const res = await clientApi.get<{ 
+    ordersList: Array<OrderType>;
+    count: number; 
+  }>(fetchUrl);
   return res.data;
 };
 

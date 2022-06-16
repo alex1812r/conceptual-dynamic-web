@@ -1,4 +1,4 @@
-import { BaseEntityType } from "../../shared/types";
+import { BaseEntityType, BaseFilterType } from "../../shared/types";
 import { OrderType } from "../orders/orders.types";
 
 export enum ClientStatusEnum {
@@ -32,6 +32,4 @@ export type UpdateClientInputType = Partial<ClientInputType> & {
   id: number;
 }
 
-export type ClientListFilterType = {
-  q?: string
-}
+export type ClientListFilterType = BaseFilterType & {}

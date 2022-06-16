@@ -26,18 +26,11 @@ export const ProductDetailsView: React.FC = () => {
             <Grid item xs={12} md={4}>
               <Stack alignItems="center">
                 <Avatar 
-                  src={data.imgUrl}
+                  src={data.image?.url}
                   variant="square" 
                   style={{ width: 180, height: 180, borderRadius: 20 }} 
                 />
-                {/* <br />
-                <Button onClick={() => {
-                  pickImage((files) => {
-                    console.log(files);
-                  })
-                }}>
-                  Upload Image
-                </Button> */}
+
               </Stack>
             </Grid>
             <Grid item xs={12} md={8}>

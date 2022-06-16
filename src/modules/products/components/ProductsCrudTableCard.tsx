@@ -1,17 +1,19 @@
 import React from 'react';
-import { CrudTableCard } from '../../../shared/components/CrudTableCard';
 import { Inventory as InventoryIcon } from '@mui/icons-material';
-import { ProductType } from '../products.types';
 import { Stack, Avatar } from '@mui/material';
+import { CrudTableCard } from '../../../shared/components/CrudTableCard';
+import { ProductType } from '../products.types';
 import { useNavigate } from 'react-router-dom';
 import { numberWithCommas } from '../../../shared/utils';
 import { ProductStatusChip } from './ProductStatusChip';
 import { CrudProps } from '../../../shared/components/CrudTable';
+import { PaginationType } from '../../../shared/hooks';
 
 interface ProductsCrudTableCardProps extends Omit<CrudProps<ProductType>, 'onRead'>{
   data: Array<ProductType>
   onAdd: () => void;
   loading?: boolean
+  pagination?: PaginationType
 }
 
 export const ProductsCrudTableCard: React.FC<ProductsCrudTableCardProps> = ({
@@ -19,7 +21,8 @@ export const ProductsCrudTableCard: React.FC<ProductsCrudTableCardProps> = ({
   onAdd,
   onEdit,
   onDelete,
-  loading
+  loading,
+  pagination
 }) => {
   const navigate = useNavigate();
   
@@ -36,6 +39,7 @@ export const ProductsCrudTableCard: React.FC<ProductsCrudTableCardProps> = ({
       onEdit={(v: ProductType) => onEdit(v)}
       data={data}
       loading={loading}
+      pagination={pagination}
       columns={[
         {
           title: 'Name',
@@ -43,8 +47,8 @@ export const ProductsCrudTableCard: React.FC<ProductsCrudTableCardProps> = ({
           render: (item: ProductType) => {
             return (
               <Stack spacing={2} flexDirection="row" alignItems="center">
-                {item.imgUrl 
-                  ? <Avatar src={item.imgUrl}  variant="square" style={{ marginRight: 10 }} /> 
+                {item.image 
+                  ? <Avatar src={item.image.url}  variant="square" style={{ marginRight: 10 }} /> 
                   : null
                 }
                 {item.name}

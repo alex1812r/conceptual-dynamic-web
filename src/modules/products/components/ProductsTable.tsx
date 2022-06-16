@@ -38,8 +38,8 @@ const TableRowItem: React.FC<TableRowItemProps> = ({ data, onDelete }) => {
     <TableRow>
       <TableCell component="th" scope="row">
         <Stack spacing={2} flexDirection="row" alignItems="center">
-          {data.imgUrl 
-            ? <Avatar src={data.imgUrl}  variant="square" style={{ marginRight: 10 }} /> 
+          {data.image 
+            ? <Avatar src={data.image.url}  variant="square" style={{ marginRight: 10 }} /> 
             : null
           }
           {data.name}

@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
 import { fetchOrdersListAction, fetchOrderAction, createOrderAction, deleteOrderAction } from "./orders.actions";
-import { OrderInputType, OrderType } from "./orders.types";
+import { OrderInputType, OrdersFilterType, OrderType } from "./orders.types";
 
-export const useOrdersList = () => {
+export const useOrdersList = (filter: OrdersFilterType = {}) => {
   const [data, setData] = useState<Array<any>>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
+  const { q, page, perPage } = filter;
+
   const getClientsList = useCallback(() => {
     setLoading(true);
-    fetchOrdersListAction()
+    fetchOrdersListAction({ q, page, perPage })
       .then((data) => {
         setData(data.ordersList)
+        setCount(data.count);
       })
       .catch((err: Error) => {
         snackbar({ color: 'error', message: err.message })
@@ -20,7 +24,7 @@ export const useOrdersList = () => {
       .finally(() => {
         setLoading(false)
       })
-  }, [snackbar]);
+  }, [page, perPage, q, snackbar]);
 
   useEffect(() => {
     getClientsList();
@@ -29,7 +33,8 @@ export const useOrdersList = () => {
   return { 
     data, 
     refetch: getClientsList,
-    loading
+    loading,
+    count
   };
 }
 

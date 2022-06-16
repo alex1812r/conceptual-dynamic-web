@@ -5,5 +5,4 @@ export const initialProductInput: ProductInputType = {
   count: 0,
   unitPrice: 0,
   description: '',
-  imgUrl: ''
 }

@@ -1,20 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSnackbar } from "../../shared/components/SnackbarProvider";
-import { createProductAction, deleteProductAction, fetchProductAction, fetchProductsListAction } from "./products.actions";
-import { ProductInputType, ProductListFilterType, ProductType } from "./products.types";
+import { createProductAction, deleteProductAction, fetchProductAction, fetchProductsListAction, updateProductAction } from "./products.actions";
+import { ProductInputType, ProductListFilterType, ProductType, UpdateProductInputType } from "./products.types";
 
 export const useProductsList = (filter: ProductListFilterType = {}) => {
   const [data, setData] = useState<Array<ProductType>>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [snackbar] = useSnackbar();
 
-  const { q } = filter;
+  const { q, perPage, page } = filter;
 
   const getProductsList = useCallback(() => {
     setLoading(true);
-    fetchProductsListAction({ q })
+    fetchProductsListAction({ q, perPage, page })
       .then((data) => {
-        setData(data.productsList)
+        setData(data.productsList);
+        setCount(data.count);
       })
       .catch((err: Error) => {
         snackbar({ color: 'error', message: err.message })
@@ -22,7 +24,7 @@ export const useProductsList = (filter: ProductListFilterType = {}) => {
       .finally(() => {
         setLoading(false)
       })
-  }, [q, snackbar]);
+  }, [page, perPage, q, snackbar]);
 
   useEffect(() => {
     getProductsList();
@@ -31,7 +33,8 @@ export const useProductsList = (filter: ProductListFilterType = {}) => {
   return { 
     data, 
     refetch: getProductsList,
-    loading
+    loading,
+    count
   };
 }
 
@@ -89,6 +92,31 @@ export const useCreateProduct = ({
 
   return { submiting, submit: createProduct }
 };
+
+export const useUpdateProduct = ({
+  onSuccess,
+  onError 
+}: { 
+  onSuccess: (data: ProductType) => void, 
+  onError: (err: Error) => void 
+}) => {
+  const [submiting, setSubmiting] = useState(false);
+
+  const updateProduct = useCallback((input: UpdateProductInputType) => {
+    setSubmiting(true);
+    updateProductAction(input)
+      .then((data) => {
+        onSuccess(data.product)
+      })
+      .catch(onError)
+      .finally(() => {
+        setSubmiting(false);
+      })
+  }, [onError, onSuccess])
+
+  return { submiting, submit: updateProduct }
+}
+
 
 export const useDeleteProduct = ({
   onSuccess,
