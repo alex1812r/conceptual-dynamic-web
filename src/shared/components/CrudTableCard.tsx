@@ -9,6 +9,7 @@ export interface CrudTableCardProps extends CustomTableProps {
   addButtonText?: string;
   onAdd: () => void;
   pagination?: PaginationType
+  loaderMessage?: string;
 }
 
 export const CrudTableCard: React.FC<CrudTableCardProps> = ({
@@ -22,7 +23,8 @@ export const CrudTableCard: React.FC<CrudTableCardProps> = ({
   onDelete,
   onEdit,
   onRead,
-  pagination
+  pagination,
+  loaderMessage
 }) => {
 
   const paginationContent = useMemo(() => {
@@ -77,6 +79,7 @@ export const CrudTableCard: React.FC<CrudTableCardProps> = ({
           onDelete={onDelete}
           onEdit={onEdit}
           onRead={onRead}
+          loaderMessage={loaderMessage}
         />
       </Box>
       {paginationContent}

@@ -41,6 +41,7 @@ export const OrdersCrudTableCard: React.FC<ClientsCrudTableCardProps> = ({
         data={data}
         loading={loading}
         pagination={pagination}
+        loaderMessage="Loading Orders..."
         columns={[
           {
             title: '#',

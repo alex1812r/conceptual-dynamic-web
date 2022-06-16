@@ -40,6 +40,7 @@ export const ProductsCrudTableCard: React.FC<ProductsCrudTableCardProps> = ({
       data={data}
       loading={loading}
       pagination={pagination}
+      loaderMessage="Loading Products..."
       columns={[
         {
           title: 'Name',

@@ -81,6 +81,7 @@ export interface CustomTableProps extends CrudProps<any> {
   columns: Array<ColumnType>
   data: Array<any>
   loading?: boolean;
+  loaderMessage?: string 
 }
 
 export const CustomTable: React.FC<CustomTableProps> = ({ 
@@ -90,6 +91,7 @@ export const CustomTable: React.FC<CustomTableProps> = ({
   onDelete,
   onEdit,
   onRead,
+  loaderMessage
 }) => {
 
   const headers = useMemo(() => {
@@ -100,7 +102,7 @@ export const CustomTable: React.FC<CustomTableProps> = ({
 
   const content = useMemo(() => {
     if(loading) 
-      return <TableRowLoading colSpan={columns.length + 1} message="Loading Products..." />;
+      return <TableRowLoading colSpan={columns.length + 1} message={loaderMessage} />;
 
     if(!data.length)
       return <TableRowEmpty colSpan={columns.length + 1} />
@@ -115,7 +117,7 @@ export const CustomTable: React.FC<CustomTableProps> = ({
         onDelete={onDelete}
       />
     ))
-  }, [columns, data, loading, onDelete, onEdit, onRead])
+  }, [columns, data, loaderMessage, loading, onDelete, onEdit, onRead])
 
   return (
     <TableContainer>
