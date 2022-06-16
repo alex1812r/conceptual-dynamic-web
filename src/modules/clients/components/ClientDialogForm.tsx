@@ -39,7 +39,7 @@ export const ClientDialogForm: React.FC<ClientDialogFormProps> = ({
   const disabledSubmit = Boolean(Object.entries(errors).length);
 
   const title = useMemo(() =>
-    edit ? 'Edit Product' : 'Add Product'
+    edit ? 'Edit Client' : 'Add Client'
   , [edit]);
 
   const submitText = useMemo(() =>
